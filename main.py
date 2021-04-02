@@ -5,6 +5,7 @@ import base
 import random
 import time
 import csv
+import pandas as pd
 #import re
 # from bs4 import BeautifulSoup
 
@@ -105,7 +106,35 @@ def updatePEValue():
             writer.writerow(row)
 
 if __name__ == '__main__':
-    data = []
-    with open(base.file_csvData)as file:
-        reader = csv.DictReader(file)
+    rawData = []
+    with open(base.file_AllStocks) as file:
+        rawData = json.load(file)
         
+    companies = []
+    for company in rawData['constituents']['shares']:
+        newData = {
+            'lastUpdated': time.time(),
+            'name': company['name'],
+            'symbol': company['symbol'],
+            'exchange': 'OMXHPI',
+            'askPrice': company['askPrice'],
+            'bidPrice': company['bidPrice'],
+            'isin': company['isin'],
+            'tradeCurrency': company['tradeCurrency'],
+        }
+        companies.append(newData)
+
+    with open(base.file_AllStocksData) as file:
+        rawData = json.load(file)
+        
+        for item in rawData:
+            correctCompany = {}
+            for company in companies:
+                if com
+"""
+    df = pd.read_csv(base.file_csvData, delimiter=';')
+    print(df)
+    print('')
+
+    df_temp = df[df['P/E-luku'].astype(float) < 20]
+    print(df_temp[df_temp['P/E-luku'].astype(float) > 0])"""
